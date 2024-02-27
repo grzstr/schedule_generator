@@ -17,8 +17,16 @@ public class main {
         Liceum.addEvent(new event ("Biologia", 45, "s.101"));
         Liceum.addEvent(new event ("Fizyka", 45, "s.100"));
         Liceum.addEvent(new event ("Informatyka", 45, "s.104"));
+        Liceum.addEvent(new event ("J.Angielski", 45, "s.105"));
+        Liceum.addEvent(new event ("J.Niemiecki", 45, "s.106"));
+        Liceum.addEvent(new event ("J.Polski", 45, "s.107"));
+        Liceum.addEvent(new event ("Historia", 45, "s.108"));
+        Liceum.addEvent(new event ("Przyroda", 45, "s.109"));
 
         Liceum.addGroup(new group ("Klasa 1B"));
+
+        ArrayList<group> Groups = Liceum.getGroups();
+        Groups.get(0).loadEvents(Liceum.getAllEvents());
         Organizations.add(Liceum);
 
         main_menu();
@@ -26,12 +34,24 @@ public class main {
 
     public static void generate_schedule(organization selected_organization){
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter begin time: ");
+        showGroups(selected_organization);
+        System.out.println("Enter group number to generate schedule: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+        group selected_group = selected_organization.getGroups().get(choice);
+        System.out.println("Enter begin time (format 00:00): ");
         String begin_time = scanner.nextLine();
-        System.out.println("Enter end time: ");
+        System.out.println("Enter end time (format 00:00): ");
         String end_time = scanner.nextLine();
-        selected_organization.generateSchedule(begin_time, end_time, 15, true);
-        selected_organization.showSchedule();
+        System.out.println("Generate schedule without weekend? (Y/N):");
+        String without_weekend = scanner.nextLine();
+        if (without_weekend == "Y") {
+            selected_group.generateSchedule(begin_time, end_time, 15, false);
+        } else
+        {
+            selected_group.generateSchedule(begin_time, end_time, 15, true);
+        }
+        selected_group.showSchedule();
         manage_organization_menu(selected_organization);
     }
     // MENU FUNCTIONS
@@ -151,7 +171,7 @@ public class main {
     }
     public static void manage_organization_menu(organization selected_organization){
         Scanner scanner = new Scanner(System.in);
-        clearScreen();
+        //clearScreen();
         System.out.println("Organization: " + selected_organization.getName() + "\n");
         System.out.println("1. Add group");
         System.out.println("2. Remove group");
@@ -199,8 +219,10 @@ public class main {
     public static void main_menu(){
         Scanner scanner = new Scanner(System.in);
         //clearScreen();
-        System.out.println("Schedule Manager\n");
-        System.out.println("1. Add organization");
+        System.out.println("\n|=================================|");
+        System.out.println("|======= Schedule Manager ========|");
+        System.out.println("|=================================|");
+        System.out.println("\n1. Add organization");
         System.out.println("2. Remove organization");
         System.out.println("3. Manage organization");
         System.out.println("4. Exit\n");
